@@ -13,7 +13,7 @@ services:
 
     web-php:
         build: 
-          context: .
+          context: ./docker-web/www
           dockerfile: ./docker-web/Dockerfile
         container_name: web-php
         volumes:
@@ -30,6 +30,14 @@ services:
         - POSTGRES_PASSWORD=root
         - POSTGRES_DB=db
         - DATABASE_HOST=web-pgsql
+
+    web-adminer:
+      image: adminer:4.8.1
+      container_name: web-adminer
+      ports:
+        - 8080:8080
+      depends_on:
+        - web-pgsql
 
 volumes:
   db:

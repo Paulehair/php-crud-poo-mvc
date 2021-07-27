@@ -2,7 +2,7 @@
 
 namespace Controller;
 
-class Router {
+class RouterController {
 
     private $url;
     private $routes = [];
@@ -51,5 +51,4 @@ class Router {
         return $this->namedRoutes[$name]->getUrl($params);
     }
 }
-
 ?>

@@ -1,10 +1,16 @@
 <?php
-$dbconn = pg_connect('host=web-pgsql port=5432 dbname=db user=root password=root')
-    or die('Could not connect');
 
-echo '<pre>' . var_export(pg_version($dbconn), true) . '</pre>';
+include('Controller/RouterController.php');
+include('Controller/ArticleController.php');
 
-pg_close($dbconn);
+use \Controller\RouterController;
+use \Controller\ArticleController;
+
+$article = new ArticleController();
+
+$routes = new RouterController('/');
+$routes->get('/', $article->index());
+
 // user
     // username
     // mail
@@ -19,4 +25,3 @@ pg_close($dbconn);
     // content
     // user_id
     // article_id
-?>
