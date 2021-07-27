@@ -8,10 +8,6 @@ class PdoConnexion
 
     private function __construct()
     {
-    }
-
-    public static function get()
-    {
         if (\is_null(self::$conn)) {
             // instantiate PDO connexion
             try {

@@ -1,55 +1,69 @@
 <?php
 
-namespace Controller;
+isset($_GET['p']) ? $path = $_GET['p'] : $path = null;
 
-class Router {
+switch ($path) {
+    // Frontend
+    case null:
+        $controller = new \Controller\FrontendController();
+        $controller->index();
+        break;
 
-    private $url;
-    private $routes = [];
-    private $namedRoutes = [];
+    case 'show':
+        $controller = new \Controller\FrontendController();
+        $controller->show($_GET['articleId']);
+        break;
 
-    public function __construct($url){
-        $this->url = $url;
-    }
+    // Admin
+    case 'admin':
+        $controller = new \Controller\AdminController();
+        $controller->index();
+        break;
 
-    public function get($path, $callable, $name = null){
-        return $this->add($path, $callable, $name, 'GET');
-    }
+    // Articles
+    case 'addArticle':
+        $controller = new \Controller\ArticleController();
+        $controller->addArticle();
+        break;
 
-    public function post($path, $callable, $name = null){
-        return $this->add($path, $callable, $name, 'POST');
-    }
+    case 'deleteArticle':
+        $controller = new \Controller\ArticleController();
+        $controller->deleteArticle();
+        break;
 
-    private function add($path, $callable, $name, $method){
-        $route = new Route($path, $callable);
-        $this->routes[$method][] = $route;
-        if(is_string($callable) && $name === null){
-            $name = $callable;
-        }
-        if($name){
-            $this->namedRoutes[$name] = $route;
-        }
-        return $route;
-    }
+    // Comments
+    case 'addComment':
+        $controller = new \Controller\CommentController();
+        $controller->addComment();
+        break;
 
-    public function run(){
-        if(!isset($this->routes[$_SERVER['REQUEST_METHOD']])){
-            throw new RouterException('REQUEST_METHOD does not exist');
-        }
-        foreach($this->routes[$_SERVER['REQUEST_METHOD']] as $route){
-            if($route->match($this->url)){
-                return $route->call();
-            }
-        }
-        throw new RouterException('No matching routes');
-    }
+    case 'deleteComment':
+        $controller = new \Controller\CommentController();
+        $controller->deleteComment();
+        break;
 
-    public function url($name, $params = []){
-        if(!isset($this->namedRoutes[$name])){
-            throw new RouterException('No route matches this name');
-        }
-        return $this->namedRoutes[$name]->getUrl($params);
-    }
+    // Security
+    case 'login':
+        $controller = new \Controller\SecurityController();
+        $controller->login();
+        break;
+
+    case 'logout':
+        $controller = new \Controller\SecurityController();
+        $controller->logout();
+        break;
+
+    case 'signup':
+        $controller = new \Controller\SecurityController();
+        $controller->signup();
+        break;
+
+    case 'updateUser':
+        $controller = new \Controller\SecurityController();
+        $controller->updateUser();
+        break;
+
+    default:
+        $controller = new \Controller\ErrorController();
+        $controller->Err404();
 }
-
-?>
